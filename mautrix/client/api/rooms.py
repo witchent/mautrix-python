@@ -12,7 +12,8 @@ from mautrix.errors import MatrixResponseError, MatrixRequestError, MRoomInUse
 from mautrix.api import Method, Path
 from mautrix.types import (JSON, UserID, RoomID, RoomAlias, StateEvent, RoomDirectoryVisibility,
                            RoomAliasInfo, RoomCreatePreset, DirectoryPaginationToken,
-                           RoomDirectoryResponse, Serializable, StrippedStateEvent)
+                           RoomDirectoryResponse, Serializable, StrippedStateEvent,
+                           PowerLevelStateEventContent)
 
 from .base import BaseClientAPI
 
@@ -37,6 +38,7 @@ class RoomMethods(BaseClientAPI):
                           name: Optional[str] = None, topic: Optional[str] = None,
                           is_direct: bool = False, invitees: Optional[List[UserID]] = None,
                           initial_state: Optional[InitialState] = None,
+                          power_levels: Optional[PowerLevelStateEventContent] = None,
                           room_version: str = None, creation_content: JSON = None) -> RoomID:
         """
         Create a new room with various configuration options.
@@ -77,6 +79,8 @@ class RoomMethods(BaseClientAPI):
             creation_content: Extra keys, such as ``m.federate``, to be added to the `m.room.create`
                 event. The server will ignore ``creator`` and ``room_version``. Future versions of
                 the specification may allow the server to ignore other keys.
+            power_levels: Set required power levels for the created room. This could allow users to
+                change avatars and names. See power_level_content_override in the spec.
 
         Returns:
             The ID of the newly created room.
@@ -110,6 +114,8 @@ class RoomMethods(BaseClientAPI):
             content["room_version"] = room_version
         if creation_content:
             content["creation_content"] = creation_content
+        if power_levels:
+            content["power_level_content_override"] = power_levels
 
         resp = await self.api.request(Method.POST, Path.createRoom, content)
         try:
