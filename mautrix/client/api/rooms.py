@@ -6,6 +6,8 @@
 from typing import Optional, List, Union, Dict, Any
 import asyncio
 
+import json
+
 from multidict import CIMultiDict
 
 from mautrix.errors import MatrixResponseError, MatrixRequestError, MRoomInUse
@@ -115,7 +117,8 @@ class RoomMethods(BaseClientAPI):
         if creation_content:
             content["creation_content"] = creation_content
         if power_levels:
-            content["power_level_content_override"] = power_levels
+            json_power_levels = json.dumps(power_levels.__dict__)
+            content["power_level_content_override"] = json_power_levels
 
         resp = await self.api.request(Method.POST, Path.createRoom, content)
         try:
