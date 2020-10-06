@@ -118,8 +118,6 @@ class RoomMethods(BaseClientAPI):
             content["creation_content"] = creation_content
         if power_levels:
             json_power_levels = json.dumps(power_levels.__dict__)
-            if len(json_power_levels["users"]) == 0:
-                del json_power_levels["users"]
             content["power_level_content_override"] = json_power_levels
 
         resp = await self.api.request(Method.POST, Path.createRoom, content)
