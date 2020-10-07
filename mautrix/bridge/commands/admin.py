@@ -131,5 +131,5 @@ async def set_ghost_display_name(evt: CommandEvent) -> EventID:
     try:
         return await intent.set_displayname(" ")
     except (MatrixRequestError, IntentError):
-        evt.log.exception("Failed to set display name.")
-        return await evt.reply("Failed to set display name.")
+        evt.log.exception("Failed to remove display name.")
+        return await evt.reply("Failed to remove display name.")
