@@ -200,9 +200,9 @@ class CommandHandler:
     _help_args: str
     help_section: HelpSection
 
-    def __init__(self, handler: CommandHandlerFunc, management_only: bool, name: str,
-                 help_text: str, help_args: str, help_section: HelpSection,
-                 needs_auth: bool, needs_admin: bool, **kwargs) -> None:
+    def __init__(self, handler: CommandHandlerFunc, management_only: bool,
+                 needs_auth: bool, needs_admin: bool, name: str,
+                 help_text: str, help_args: str, help_section: HelpSection, **kwargs) -> None:
         """
         Args:
             handler: The function handling the execution of this command.
@@ -283,8 +283,8 @@ class CommandHandler:
         return f"**{self.name}** {self._help_args} - {self._help_text}"
 
 
-def command_handler(_func: Optional[CommandHandlerFunc] = None, *, needs_auth: bool = True,
-                    needs_admin: bool = False, management_only: bool = False,
+def command_handler(_func: Optional[CommandHandlerFunc] = None, *, management_only: bool = False,
+                    needs_auth: bool = True, needs_admin: bool = False,
                     name: Optional[str] = None, help_text: str = "", help_args: str = "",
                     help_section: HelpSection = None, aliases: Optional[List[str]] = None,
                     _handler_class: Type[CommandHandler] = CommandHandler,
