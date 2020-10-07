@@ -184,8 +184,11 @@ class CommandHandler:
         name: The name of this command.
         help_section: Section of the help in which this command will appear.
     """
-    management_only: bool
     name: str
+
+    management_only: bool
+    needs_admin: bool
+    needs_auth: bool
 
     _help_text: str
     _help_args: str
@@ -224,6 +227,10 @@ class CommandHandler:
         if self.management_only and not evt.is_management:
             return (f"`{evt.command}` is a restricted command: "
                     "you may only run it in management rooms.")
+        elif self.needs_admin and not evt.sender.is_admin:
+            return "This command requires administrator privileges."
+        elif self.needs_auth and not await evt.sender.is_logged_in():
+            return "This command requires you to be logged in."
         return None
 
     def has_permission(self, key: HelpCacheKey) -> bool:
@@ -236,7 +243,9 @@ class CommandHandler:
             True if a user with the given state is allowed to issue the
             command.
         """
-        return not self.management_only or key.is_management
+        return ((not self.management_only or key.is_management) and
+                (not self.needs_admin or key.is_admin) and
+                (not self.needs_auth or key.is_logged_in))
 
     async def __call__(self, evt: CommandEvent) -> Any:
         """Executes the command if evt was issued with proper rights.

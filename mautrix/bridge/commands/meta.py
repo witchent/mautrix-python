@@ -7,6 +7,8 @@ from typing import Dict, List
 
 from mautrix.types import EventID
 
+from ... import portal as po
+
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
                       SECTION_GENERAL)
 
@@ -31,6 +33,32 @@ async def version(evt: CommandEvent) -> None:
         await evt.reply(f"[{evt.processor.bridge.name}]({evt.processor.bridge.repo_url}) "
                         f"{evt.processor.bridge.markdown_version or evt.processor.bridge.version}")
 
+@command_handler(needs_admin=True, needs_auth=False, name="set-pl",
+                 help_section=SECTION_ADMIN,
+                 help_args="<_level_> [_mxid_]",
+                 help_text="Set a temporary power level without affecting the bridge.")
+async def set_power_level(evt: CommandEvent) -> EventID:
+    try:
+        level = int(evt.args[0])
+    except (KeyError, IndexError):
+        return await evt.reply("**Usage:** `$cmdprefix+sp set-pl <level> [mxid]`")
+    except ValueError:
+        return await evt.reply("The level must be an integer.")
+    portal = po.Portal.get_by_mxid(evt.room_id)
+    if portal:
+        levels = await portal.main_intent.get_power_levels(evt.room_id)
+    else:
+        levels = await evt.az.intent.get_power_levels(evt.room_id)
+    mxid = evt.args[1] if len(evt.args) > 1 else evt.sender.mxid
+    levels.users[mxid] = level
+    try:
+        if portal:
+            return await portal.main_intent.set_power_levels(evt.room_id, levels)
+        else:
+            return await evt.az.intent.set_power_levels(evt.room_id, levels)
+    except MatrixRequestError:
+        evt.log.exception("Failed to set power level.")
+        return await evt.reply("Failed to set power level.")
 
 @command_handler()
 async def unknown_command(evt: CommandEvent) -> EventID:
