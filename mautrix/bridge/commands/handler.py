@@ -137,11 +137,20 @@ class CommandEvent:
         html = self._render_message(message, allow_html=allow_html,
                                     render_markdown=render_markdown)
 
-        return self.az.intent.send_notice(self.room_id, message, html=html)
+        portal = await self.processor.bridge.get_portal(evt.room_id)
+        if portal:
+            return portal.main_intent.send_notice(self.room_id, message, html=html)
+        else:
+            return self.az.intent.send_notice(self.room_id, message, html=html)
 
     def mark_read(self) -> Awaitable[None]:
         """Marks the command as read by the bot."""
-        return self.az.intent.mark_read(self.room_id, self.event_id)
+        portal = await self.processor.bridge.get_portal(evt.room_id)
+        if portal:
+            return portal.main_intent.mark_read(self.room_id, self.event_id)
+        else:
+            return self.az.intent.mark_read(self.room_id, self.event_id)
+
 
     def _replace_command_prefix(self, message: str) -> str:
         """Returns the string with the proper command prefix entered."""
