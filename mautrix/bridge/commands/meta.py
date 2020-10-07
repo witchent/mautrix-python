@@ -7,7 +7,7 @@ from typing import Dict, List
 
 from mautrix.types import EventID
 
-from .. import portal as po
+from mautrix.bridge import Bridge as bridge
 
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
                       SECTION_GENERAL, SECTION_ADMIN)
@@ -44,7 +44,7 @@ async def set_power_level(evt: CommandEvent) -> EventID:
         return await evt.reply("**Usage:** `$cmdprefix+sp set-pl <level> [mxid]`")
     except ValueError:
         return await evt.reply("The level must be an integer.")
-    portal = po.Portal.get_by_mxid(evt.room_id)
+    portal = bridge.get_portal(evt.room_id)
     if portal:
         levels = await portal.main_intent.get_power_levels(evt.room_id)
     else:
