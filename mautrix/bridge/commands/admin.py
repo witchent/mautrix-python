@@ -111,3 +111,25 @@ async def set_ghost_display_name(evt: CommandEvent) -> EventID:
     except (MatrixRequestError, IntentError):
         evt.log.exception("Failed to set display name.")
         return await evt.reply("Failed to set display name.")
+
+@command_handler(needs_admin=True, needs_auth=False, name="remove-displayname",
+                 help_section=SECTION_ADMIN,
+                 help_args="[_mxid_]",
+                 help_text="Removes the display name for a ghost user.")
+async def set_ghost_display_name(evt: CommandEvent) -> EventID:
+    if len(evt.args) > 0:
+        puppet = await evt.processor.bridge.get_puppet(evt.args[0])
+        if puppet is None:
+            return await evt.reply("The given mxid was not a valid ghost user.")
+        intent = puppet.intent
+    elif evt.is_portal:
+        portal = await evt.processor.bridge.get_portal(evt.room_id)
+        intent = portal.main_intent
+    else:
+        return await evt.reply("No mxid given and not in a portal.")
+
+    try:
+        return await intent.set_displayname(" ")
+    except (MatrixRequestError, IntentError):
+        evt.log.exception("Failed to set display name.")
+        return await evt.reply("Failed to set display name.")
