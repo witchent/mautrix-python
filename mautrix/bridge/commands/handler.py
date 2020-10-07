@@ -287,9 +287,8 @@ def command_handler(_func: Optional[CommandHandlerFunc] = None, *, needs_auth: b
 
     def decorator(func: CommandHandlerFunc) -> CommandHandler:
         actual_name = name or func.__name__.replace("_", "-")
-        handler = _handler_class(func, management_only, needs_auth: bool = True,
-                                 needs_admin: bool = False, actual_name, help_text,
-                                 help_args, help_section, **kwargs)
+        handler = _handler_class(func, management_only, needs_auth, needs_admin, actual_name,
+                                 help_text, help_args, help_section, **kwargs)
         command_handlers[handler.name] = handler
         if aliases:
             for alias in aliases:
