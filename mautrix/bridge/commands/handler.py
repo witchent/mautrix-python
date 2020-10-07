@@ -200,9 +200,9 @@ class CommandHandler:
     _help_args: str
     help_section: HelpSection
 
-    def __init__(self, handler: CommandHandlerFunc, management_only: bool,
-                 needs_auth: bool, needs_admin: bool, name: str,
-                 help_text: str, help_args: str, help_section: HelpSection, **kwargs) -> None:
+    def __init__(self, handler: CommandHandlerFunc, management_only: bool, name: str,
+                 help_text: str, help_args: str, help_section: HelpSection,
+                 needs_auth: bool, needs_admin: bool, **kwargs) -> None:
         """
         Args:
             handler: The function handling the execution of this command.

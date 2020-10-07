@@ -30,7 +30,7 @@ async def set_power_level(evt: CommandEvent) -> EventID:
     mxid = evt.args[1] if len(evt.args) > 1 else evt.sender.mxid
     levels.users[mxid] = level
     try:
-        if portal:
+        if evt.is_portal:
             return await portal.main_intent.set_power_levels(evt.room_id, levels)
         else:
             return await evt.az.intent.set_power_levels(evt.room_id, levels)
