@@ -7,7 +7,7 @@ from typing import Dict, List
 
 from mautrix.types import EventID
 
-from ... import portal as po
+from .. import portal as po
 
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
                       SECTION_GENERAL)
