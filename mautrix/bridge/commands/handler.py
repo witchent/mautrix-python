@@ -25,6 +25,7 @@ HelpSection = NamedTuple('HelpSection', name=str, order=int, description=str)
 HelpCacheKey = NamedTuple('HelpCacheKey', is_management=bool, is_portal=bool)
 
 SECTION_GENERAL = HelpSection("General", 0, "")
+SECTION_ADMIN = HelpSection("Administration", 50, "")
 
 
 def ensure_trailing_newline(s: str) -> str:
