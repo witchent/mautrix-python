@@ -200,9 +200,9 @@ class CommandHandler:
     _help_args: str
     help_section: HelpSection
 
-    def __init__(self, handler: CommandHandlerFunc, management_only: bool,
-                 needs_auth: bool, needs_admin: bool, name: str,
-                 help_text: str, help_args: str, help_section: HelpSection, **kwargs) -> None:
+    def __init__(self, handler: CommandHandlerFunc, management_only: bool, name: str,
+                 help_text: str, help_args: str, help_section: HelpSection,
+                 needs_auth: bool, needs_admin: bool, **kwargs) -> None:
         """
         Args:
             handler: The function handling the execution of this command.
@@ -284,17 +284,17 @@ class CommandHandler:
 
 
 def command_handler(_func: Optional[CommandHandlerFunc] = None, *, management_only: bool = False,
-                    needs_auth: bool = True, needs_admin: bool = False,
                     name: Optional[str] = None, help_text: str = "", help_args: str = "",
                     help_section: HelpSection = None, aliases: Optional[List[str]] = None,
                     _handler_class: Type[CommandHandler] = CommandHandler,
+                    needs_auth: bool = True, needs_admin: bool = False,
                     **kwargs) -> Callable[[CommandHandlerFunc], CommandHandler]:
     """Decorator to create CommandHandlers"""
 
     def decorator(func: CommandHandlerFunc) -> CommandHandler:
         actual_name = name or func.__name__.replace("_", "-")
-        handler = _handler_class(func, management_only, needs_auth, needs_admin, actual_name,
-                                 help_text, help_args, help_section, **kwargs)
+        handler = _handler_class(func, management_only, actual_name, help_text, help_args,
+                                 help_section, needs_auth, needs_admin, **kwargs)
         command_handlers[handler.name] = handler
         if aliases:
             for alias in aliases:
