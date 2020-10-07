@@ -6,8 +6,6 @@
 
 from mautrix.types import EventID
 
-from mautrix.bridge import Bridge as bridge
-
 from .handler import (command_handler, CommandEvent, SECTION_ADMIN)
 
 
