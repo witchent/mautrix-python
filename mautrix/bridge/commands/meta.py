@@ -10,6 +10,7 @@ from mautrix.types import EventID
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
                       SECTION_GENERAL)
 
+
 @command_handler(help_section=SECTION_GENERAL,
                  help_text="Cancel an ongoing action.")
 async def cancel(evt: CommandEvent) -> EventID:
@@ -29,6 +30,7 @@ async def version(evt: CommandEvent) -> None:
     else:
         await evt.reply(f"[{evt.processor.bridge.name}]({evt.processor.bridge.repo_url}) "
                         f"{evt.processor.bridge.markdown_version or evt.processor.bridge.version}")
+
 
 @command_handler()
 async def unknown_command(evt: CommandEvent) -> EventID:

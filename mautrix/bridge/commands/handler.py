@@ -139,9 +139,9 @@ class CommandEvent:
 
         if self.is_portal:
             portal = await self.processor.bridge.get_portal(self.room_id)
-            return portal.main_intent.send_notice(self.room_id, message, html=html)
+            return await portal.main_intent.send_notice(self.room_id, message, html=html)
         else:
-            return self.az.intent.send_notice(self.room_id, message, html=html)
+            return await self.az.intent.send_notice(self.room_id, message, html=html)
 
     def mark_read(self) -> Awaitable[None]:
         """Marks the command as read by the bot."""

@@ -6,7 +6,7 @@
 
 from mautrix.types import EventID
 
-from mautrix.errors import (MatrixRequestError, MatrixRequestError)
+from mautrix.errors import (MatrixRequestError, IntentError)
 
 from .handler import (command_handler, CommandEvent, SECTION_ADMIN)
 
