@@ -10,7 +10,6 @@ from mautrix.types import EventID
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
                       SECTION_GENERAL)
 
-
 @command_handler(help_section=SECTION_GENERAL,
                  help_text="Cancel an ongoing action.")
 async def cancel(evt: CommandEvent) -> EventID:
