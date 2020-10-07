@@ -20,7 +20,7 @@ async def set_power_level(evt: CommandEvent) -> EventID:
         return await evt.reply("**Usage:** `$cmdprefix+sp set-pl <level> [mxid]`")
     except ValueError:
         return await evt.reply("The level must be an integer.")
-    portal = bridge.get_portal(evt.room_id)
+    portal = evt.processor.bridge.get_portal(evt.room_id)
     if portal:
         levels = await portal.main_intent.get_power_levels(evt.room_id)
     else:
