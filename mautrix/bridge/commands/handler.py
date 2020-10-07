@@ -194,13 +194,16 @@ class CommandHandler:
     _help_args: str
     help_section: HelpSection
 
-    def __init__(self, handler: CommandHandlerFunc, management_only: bool, name: str,
+    def __init__(self, handler: CommandHandlerFunc, management_only: bool,
+                 needs_auth: bool, needs_admin: bool, name: str,
                  help_text: str, help_args: str, help_section: HelpSection, **kwargs) -> None:
         """
         Args:
             handler: The function handling the execution of this command.
             management_only: Whether the command can exclusively be issued
                 in a management room.
+            needs_auth: Whether the command needs the bridge to be authed already
+            needs_admin: Whether the command needs the issuer to be bridge admin
             name: The name of this command.
             help_text: The text displayed in the help for this command.
             help_args: Help text for the arguments of this command.
@@ -210,6 +213,8 @@ class CommandHandler:
             setattr(self, key, value)
         self._handler = handler
         self.management_only = management_only
+        self.needs_admin = needs_admin
+        self.needs_auth = needs_auth
         self.name = name
         self._help_text = help_text
         self._help_args = help_args
@@ -272,7 +277,8 @@ class CommandHandler:
         return f"**{self.name}** {self._help_args} - {self._help_text}"
 
 
-def command_handler(_func: Optional[CommandHandlerFunc] = None, *, management_only: bool = False,
+def command_handler(_func: Optional[CommandHandlerFunc] = None, *, needs_auth: bool = True,
+                    needs_admin: bool = False, management_only: bool = False,
                     name: Optional[str] = None, help_text: str = "", help_args: str = "",
                     help_section: HelpSection = None, aliases: Optional[List[str]] = None,
                     _handler_class: Type[CommandHandler] = CommandHandler,
@@ -281,8 +287,9 @@ def command_handler(_func: Optional[CommandHandlerFunc] = None, *, management_on
 
     def decorator(func: CommandHandlerFunc) -> CommandHandler:
         actual_name = name or func.__name__.replace("_", "-")
-        handler = _handler_class(func, management_only, actual_name, help_text, help_args,
-                                 help_section, **kwargs)
+        handler = _handler_class(func, management_only, needs_auth: bool = True,
+                                 needs_admin: bool = False, actual_name, help_text,
+                                 help_args, help_section, **kwargs)
         command_handlers[handler.name] = handler
         if aliases:
             for alias in aliases:
