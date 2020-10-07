@@ -6,7 +6,7 @@
 
 from mautrix.types import EventID
 
-from mautrix.errors import MatrixRequestError
+from mautrix.errors import (MatrixRequestError, MatrixRequestError)
 
 from .handler import (command_handler, CommandEvent, SECTION_ADMIN)
 
@@ -34,6 +34,6 @@ async def set_power_level(evt: CommandEvent) -> EventID:
             return await portal.main_intent.set_power_levels(evt.room_id, levels)
         else:
             return await evt.az.intent.set_power_levels(evt.room_id, levels)
-    except MatrixRequestError:
+    except (MatrixRequestError, IntentError):
         evt.log.exception("Failed to set power level.")
         return await evt.reply("Failed to set power level.")

@@ -113,7 +113,7 @@ class CommandEvent:
         """
         return self.is_management
 
-    def reply(self, message: str, allow_html: bool = False, render_markdown: bool = True
+    async def reply(self, message: str, allow_html: bool = False, render_markdown: bool = True
               ) -> Awaitable[EventID]:
         """Write a reply to the room in which the command was issued.
 
@@ -138,6 +138,7 @@ class CommandEvent:
                                     render_markdown=render_markdown)
 
         if self.is_portal:
+            portal = await self.processor.bridge.get_portal(self.room_id)
             return portal.main_intent.send_notice(self.room_id, message, html=html)
         else:
             return self.az.intent.send_notice(self.room_id, message, html=html)
