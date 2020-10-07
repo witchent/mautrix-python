@@ -8,7 +8,7 @@ from typing import Dict, List
 from mautrix.types import EventID
 
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
-                      SECTION_GENERAL, SECTION_ADMIN)
+                      SECTION_GENERAL)
 
 
 @command_handler(help_section=SECTION_GENERAL,
