@@ -10,7 +10,7 @@ from mautrix.types import EventID
 from .. import portal as po
 
 from .handler import (HelpSection, HelpCacheKey, command_handler, CommandEvent, command_handlers,
-                      SECTION_GENERAL)
+                      SECTION_GENERAL, SECTION_ADMIN)
 
 
 @command_handler(help_section=SECTION_GENERAL,
